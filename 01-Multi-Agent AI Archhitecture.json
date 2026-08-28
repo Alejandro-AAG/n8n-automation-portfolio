@@ -1,0 +1,143 @@
+{
+  "name": "Arquitectura Agentes de IA",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -80,
+        16
+      ],
+      "id": "a2ab17cf-913a-41a0-be38-532868bc5d61",
+      "name": "When chat message received",
+      "webhookId": "2ed68b49-35f5-43ad-842f-64ed19650cb3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un agente de conocimiento con acceso a una herramienta de consulta (Wikipedia).\n\nReglas de comportamiento:\n- Cuando el usuario pregunte por definiciones, conceptos, fechas, orígenes, historia, autores, tecnologías, herramientas o términos técnicos, debes usar la herramienta Wikipedia antes de responder.\n- No inventes información factual.\n- Si la herramienta no devuelve resultados claros, indicalo y pide una aclaración.\n- Resume la información en español claro, lenguaje técnico profesional y estructurado.\n- Prioriza datos verificables.\n- No respondas solo con texto crudo de Wikipedia: interpreta y sintetiza.\n- Usa la herramienta solo cuando sea necesario (no para opiniones, explicaciones personales o\nrazonamiento abstracto).\n\n\n\nLa funcion principal que tienes es responder a este mensaje: \n\n\n\n\n {{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        160,
+        16
+      ],
+      "id": "657e5cd6-9f55-4fe3-8b62-e628b107adb0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        224
+      ],
+      "id": "81eb35ae-c7d1-4bf2-ba6d-34df63f15b3e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 7
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        144,
+        224
+      ],
+      "id": "debc3358-0692-415e-ae01-a7b1eb0e2c88",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        400,
+        224
+      ],
+      "id": "4d01cc97-da9a-4362-9d70-19408ef03b03",
+      "name": "Wikipedia"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e14142de-e154-4ecc-98d1-250d888ac445",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c526d9c9424a7ab91fe50e5c10f87a3dcf57a2e474bcc60d6e4db5936de5342b"
+  },
+  "nodeGroups": [],
+  "id": "qZKjzKxTlBk6QRXq",
+  "tags": []
+}

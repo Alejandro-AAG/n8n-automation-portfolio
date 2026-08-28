@@ -1,0 +1,154 @@
+{
+  "name": "Agente IA para envio Automatico de Correo",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c4e2f812-a0d6-4565-afc8-ba04b5f4d1bd",
+      "name": "When chat message received",
+      "webhookId": "9879b2bf-2147-40ce-97fc-2c359e54bc46"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres un agente que envía correos usando Gmail.\n\nFlujo simple:\n1) Pedir email\n2) Pedir tema/asunto del correo\n3) Generar el cuerpo del mensaje con IA\n4) Enviar correo con Gmail\n\nReglas:\n\nEMAIL:\n- si no tienes un email aún, pide el email con una sola pregunta.\n- Si el usuario escribe un email válido (contiene \"@\" y un \".\" después del \"@\", sin espacios), guárdalo\ncomo email_destino.\n\nTEMA:\n- Si ya tienes email pero no tienes tema, pide:\n\"¿Cuál es el asunto o tema del correo?\"\n\nGENERACIÓN:\n- Cuando tengas email y tema:\n- Genera subject usando el tema\n- Genera message con IA en formato profesional:\n- saludo corto\n- explicación clara del tema\n- cierre profesional\n- \nENVÍO:\n- Cuando tengas email y tema, debes usar la Tool Gmail para enviar el correo.\n\nFormato de envío (obligatorio):\n- To - email_destino\n- Subject - subject generado\n- Message - message generado en HTML\n\nRegla de ejecución:\n- Si falta email → pregunta email\n- Si falta tema → pregunta tema\n- Si ya tienes ambos → genera contenido y envía con Gmail\n\nDespués de enviar:\n- Responde al usuario: \"Correo enviado correctamente.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "925e68e7-d7f4-4ca1-84f7-c8dd649c9f2b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "31fc1b0e-8ffa-4851-8c4f-0140d8038012",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "d84af745-2c60-4720-8939-647b506225b3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI('to') }}",
+        "subject": "={{ $fromAI('subjet')  }}",
+        "message": "={{ $fromAI('message') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        208
+      ],
+      "id": "30da1597-d27e-4ae9-874f-0dd203b6f120",
+      "name": "Send a message in Gmail",
+      "webhookId": "4beb0065-61fe-4f35-9837-7922f874077a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kl061GiYtULbXN8n",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1d94343e-b6ac-4273-b747-b3e30e65a7e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c526d9c9424a7ab91fe50e5c10f87a3dcf57a2e474bcc60d6e4db5936de5342b"
+  },
+  "nodeGroups": [],
+  "id": "L7Zm2fpMIdJ5R40V",
+  "tags": []
+}

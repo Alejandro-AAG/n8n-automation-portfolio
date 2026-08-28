@@ -1,0 +1,979 @@
+{
+  "name": "Agente Editorial WordPress",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -224
+      ],
+      "id": "6cade121-9be7-4111-8c5e-22515ad9139b",
+      "name": "Disparador Manual de Pruebas"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -48
+      ],
+      "id": "bdfa5c7e-a643-499d-8192-ab86bada3905",
+      "name": "Control: Procesar 1 Artículo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "011ffddb-c7e1-43b0-8fcb-eaad55067c4f",
+              "name": "prompt",
+              "value": "={{ $json.PROMPT }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -48
+      ],
+      "id": "308d028d-3457-495e-a382-d6c246ca7ad3",
+      "name": "Preparación de Variables Iniciales"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Redacta un artículo educativo, profesional y estratégico en español latinoamericano, optimizado para SEO, basado en el siguiente tema:\n\n{{ $json.prompt }}\n\nOBJETIVO DEL CONTENIDO\n\nEl objetivo es generar un artículo extenso, profundo y bien fundamentado, orientado a viajeros informados, creadores de contenido de turismo, agencias de viaje y profesionales del sector turístico que buscan información confiable, contextualizada y útil para la toma de decisiones reales.\n\nEl texto no debe ser superficial ni genérico.\nDebe desarrollar el tema con análisis práctico, contexto del sector turístico actual y recomendaciones aplicables.\n\nEXTENSIÓN OBLIGATORIA\n\nEl artículo debe tener un mínimo aproximado de 2400 caracteres, distribuidos de forma equilibrada entre introducción, desarrollo y resumen final.\n\nNo reduzcas la extensión para ahorrar tokens.\nPrioriza claridad, profundidad, utilidad real y desarrollo completo del tema.\n\nENFOQUE EDITORIAL OBLIGATORIO\n\nTono profesional, informativo y realista.\n\nOrientado a escenarios reales de viaje, planificación, presupuesto, logística, seguridad y experiencia del viajero.\n\nEvita completamente:\n\nHype\nFrases de marketing exageradas\nPromesas irreales\nLenguaje comercial agresivo\n\nEl contenido debe reflejar:\n\nAnálisis informado\nExperiencia práctica en viajes\nVisión responsable del turismo\nRecomendaciones basadas en planificación, seguridad y sostenibilidad\n\nESTRUCTURA DEL ARTÍCULO (OBLIGATORIA)\n\nIntroducción\n\nExtensión aproximada: 120 a 180 palabras.\n\nPresenta el tema desde una perspectiva estratégica o práctica.\n\nExplica su relevancia actual en el contexto del turismo moderno (tendencias, presupuesto, seguridad, sostenibilidad, trabajo remoto, experiencias culturales).\n\nEvita definiciones obvias o explicaciones triviales.\n\nDesarrollo\n\nUsa entre 3 y 5 secciones principales, obligatoriamente.\n\nCada sección debe:\n\nUsar un título claro con <h2>\nTener al menos 2 a 4 párrafos bien desarrollados\nAbordar un aspecto distinto del tema, por ejemplo:\n\nContexto actual del destino o tendencia\nPlanificación logística y presupuesto\nSeguridad y consideraciones prácticas\nImpacto cultural y turismo responsable\nErrores comunes y buenas prácticas de viaje\n\nNo repetir ideas entre secciones.\nIncluir ejemplos prácticos solo cuando aporten claridad real y aplicabilidad.\n\nResumen final\n\nUsa obligatoriamente el título:\n\n<h2>Resumen final</h2>\n\nExtensión aproximada: 120 a 180 palabras.\n\nResume las ideas clave con redacción nueva.\n\nEnfatiza planificación responsable, decisiones informadas y experiencia de viaje consciente.\n\nNo uses bajo ningún motivo las palabras:\n\nConclusión\nConclusion\nVariantes similares\n\nFORMATO DE SALIDA (ESTRICTO)\n\nDevuelve únicamente HTML válido.\n\nUsa exclusivamente estas etiquetas:\n\n<p>, <strong>, <em>, <ul>, <li>, <h2>, <h3>\n\nNo uses Markdown.\nNo envuelvas el contenido en ```html\nNo incluyas títulos generales fuera del contenido.\nNo uses emojis.\nNo uses lenguaje informal."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 1024
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        832,
+        -48
+      ],
+      "id": "ae3f467b-6f48-4672-a20a-af7a60c30450",
+      "name": "IA: Redactor de Artículos de Viaje",
+      "credentials": {
+        "openAiApi": {
+          "id": "pTl1hDlp5PfGASTi",
+          "name": "OpenAi Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Actúa como un redactor SEO profesional especializado en turismo, viajes y contenido estratégico para agencias de viaje y creadores de contenido turístico.\n\nTu tarea es generar un único título en español, optimizado para SEO, basado en el siguiente artículo:\n\n{{ $json.output[0].content[0].text }}\n\nINSTRUCCIONES OBLIGATORIAS:\n\nEl título debe tener un máximo de 60 caracteres.\n\nDebe reflejar con precisión el contenido real del artículo.\n\nUsa palabras clave que ya estén presentes en el texto.\n\nEvita títulos sensacionalistas, exagerados o de marketing.\n\nEl tono debe ser profesional, informativo y confiable.\n\nDebe ser relevante para viajeros, planificación de viajes y turismo responsable.\n\nNo incluyas emojis.\n\nNo incluyas signos especiales innecesarios.\n\nNo uses HTML.\n\nNo uses comillas.\n\nFORMATO DE SALIDA:\n\nDevuelve únicamente el texto del título.\n\nNo agregues explicaciones, etiquetas ni saltos de línea."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 256
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        -48
+      ],
+      "id": "05a8bda3-0204-45c4-b410-9495a13de46d",
+      "name": "IA: Generador de Títulos Atractivos",
+      "credentials": {
+        "openAiApi": {
+          "id": "pTl1hDlp5PfGASTi",
+          "name": "OpenAi Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $json.output[0].content[0].text }}",
+        "additionalFields": {
+          "content": "={{ $('IA: Redactor de Artículos de Viaje').item.json.output[0].content[0].text }}",
+          "status": "draft"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        -48
+      ],
+      "id": "22b1fb3d-0df7-46d8-af49-536a6c72d10e",
+      "name": "WordPress: Crear Borrador Inicial",
+      "credentials": {
+        "wordpressApi": {
+          "id": "NVJoPfsZ5IJ1H53C",
+          "name": "Conexión Wordpress Explora Mundo Travel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "307c6ee1-2cf8-43c0-8c66-8b90bbec4095",
+              "name": "image_query",
+              "value": "={{\n  $json.title?.raw?.toLowerCase().includes('playa') || $json.title?.raw?.toLowerCase().includes('mar') || $json.title?.raw?.toLowerCase().includes('isla')\n    ? 'tropical beach paradise'\n    : $json.title?.raw?.toLowerCase().includes('montaña') || $json.title?.raw?.toLowerCase().includes('nieve') || $json.title?.raw?.toLowerCase().includes('bosque')\n      ? 'mountain landscape adventure'\n      : $json.title?.raw?.toLowerCase().includes('ciudad') || $json.title?.raw?.toLowerCase().includes('europa') || $json.title?.raw?.toLowerCase().includes('turismo')\n        ? 'european city travel'\n        : 'beautiful travel destination'\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1744,
+        -48
+      ],
+      "id": "be6140cb-bfe9-4417-b085-d696c8877c99",
+      "name": "Lógica: Optimizador de Búsqueda (Pexels)"
+    },
+    {
+      "parameters": {
+        "url": "https://api.pexels.com/v1/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.image_query }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "i3si4WWTR4Fwl6OW33TP57UrX8dqgreSnSl09MV0YTuzn863Jw1FOzwY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        320,
+        336
+      ],
+      "id": "1d7ab2b5-a904-4cdc-b70e-99a5e7412908",
+      "name": "Pexels: Buscar Imagen de Destino"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.photos[0].src.large2x }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        528,
+        336
+      ],
+      "id": "1df8e7d3-f6de-4faf-88eb-84207cab0302",
+      "name": "Pexels: Descargar Archivo Binario"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://render2web.site/wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Disposition",
+              "value": "=attachment; filename={{ $binary.data.fileName}}.{{ $binary.data.fileExtension }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        736,
+        336
+      ],
+      "id": "5c53e73a-cc58-4787-b368-520994b67b61",
+      "name": "WordPress: Subir a Biblioteca de Medios",
+      "credentials": {
+        "wordpressApi": {
+          "id": "NVJoPfsZ5IJ1H53C",
+          "name": "Conexión Wordpress Explora Mundo Travel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://render2web.site/wp-json/wp/v2/posts/{{ $('WordPress: Crear Borrador Inicial').item.json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "=featured_media",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        944,
+        336
+      ],
+      "id": "9350f343-e795-46a3-9651-4a8a46a37153",
+      "name": "WordPress: Vincular Imagen Destacada",
+      "credentials": {
+        "wordpressApi": {
+          "id": "NVJoPfsZ5IJ1H53C",
+          "name": "Conexión Wordpress Explora Mundo Travel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w",
+          "mode": "list",
+          "cachedResultName": "ExploraMundo Travel Contenidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contenidos 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Google Sheets: Lectura de Planificación').item.json.row_number }}",
+            "ID POST": "={{ $('Google Sheets: Lectura de Planificación').item.json.row_number }}",
+            "TITLE": "={{ $('WordPress: Crear Borrador Inicial').item.json.title.rendered }}",
+            "URL": "={{ $('WordPress: Crear Borrador Inicial').item.json.guid.rendered }}",
+            "DATA": "={{ $now.format('dd/LL/yyyy') }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "ID POST",
+              "displayName": "ID POST",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PROMPT",
+              "displayName": "PROMPT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TITLE",
+              "displayName": "TITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATA",
+              "displayName": "DATA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "METATITLE",
+              "displayName": "METATITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "METADESCRIPTION",
+              "displayName": "METADESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1152,
+        336
+      ],
+      "id": "2d2b3cec-32c2-458a-9f7d-64173aa2e2ff",
+      "name": "Google Sheets: Registro de Progreso",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WRJKLyPmbRxt6K2l",
+          "name": "Google Sheets Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Genera un META TITLE y una META DESCRIPTION optimizados para SEO en español, diseñados específicamente para el blog de viajes Explora Mundo Travel, basados en el siguiente artículo.\n\nDATOS DEL ARTÍCULO:\n\nTítulo: {{ $('WordPress: Crear Borrador Inicial').item.json.title.rendered }}\n\nContenido: {{ $('WordPress: Crear Borrador Inicial').item.json.content.rendered }}\n\nExtracto: {{ $('WordPress: Crear Borrador Inicial').item.json.excerpt.rendered }}\n\nREQUISITOS OBLIGATORIOS:\n\nMETA TITLE:\n\nMáximo 60 caracteres.\n\nIncluir el destino o la palabra clave principal del viaje.\n\nAtractivo, profesional y con un tono inspirador.\n\nAdecuado para guías de viaje, consejos turísticos o relatos de aventura.\n\nSin comillas.\n\nMETA DESCRIPTION:\n\nMáximo 160 caracteres.\n\nResumir el valor del artículo (qué aprenderá o qué descubrirá el viajero).\n\nLenguaje evocador, natural y profesional.\n\nEnfocado en despertar la curiosidad por el destino o resolver dudas de viaje.\n\nInvitar a leer el contenido completo con una llamada a la acción sutil.\n\nSin comillas.\n\nFORMATO DE SALIDA (OBLIGATORIO):\nDevuelve únicamente un JSON válido con esta estructura exacta:\n\n{\n\"meta_title\": \"\",\n\"meta_description\": \"\"\n}\n\nNo incluyas texto adicional, explicaciones ni comentarios fuera del JSON."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1360,
+        336
+      ],
+      "id": "2dd824d4-0a3f-45e4-8e54-698906d229bd",
+      "name": "IA: Especialista en Estrategia SEO",
+      "credentials": {
+        "openAiApi": {
+          "id": "pTl1hDlp5PfGASTi",
+          "name": "OpenAi Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://render2web.site/wp-json/wp/v2/posts/{{ $('WordPress: Crear Borrador Inicial').item.json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": \"{{ JSON.parse($json.output[0].content[0].text).meta_title }}\",\n    \"_yoast_wpseo_metadesc\": \"{{ JSON.parse($json.output[0].content[0].text).meta_description }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        320,
+        672
+      ],
+      "id": "31640007-96a1-4791-93d3-efcb31049bb5",
+      "name": "Yoast SEO: Inyectar Metadatos",
+      "credentials": {
+        "wordpressApi": {
+          "id": "NVJoPfsZ5IJ1H53C",
+          "name": "Conexión Wordpress Explora Mundo Travel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "postId": "={{ $('WordPress: Crear Borrador Inicial').item.json.id }}",
+        "updateFields": {
+          "slug": "={{ $('WordPress: Crear Borrador Inicial').item.json.slug }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        528,
+        672
+      ],
+      "id": "1efde4cd-083f-4aa5-badc-102f7152904d",
+      "name": "WordPress: Publicación Final (En Vivo)",
+      "credentials": {
+        "wordpressApi": {
+          "id": "NVJoPfsZ5IJ1H53C",
+          "name": "Conexión Wordpress Explora Mundo Travel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w",
+          "mode": "list",
+          "cachedResultName": "ExploraMundo Travel Contenidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contenidos 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Google Sheets: Registro de Progreso').item.json.row_number }}",
+            "METATITLE": "={{ JSON.parse($('IA: Especialista en Estrategia SEO').item.json.output[0].content[0].text).meta_title }}",
+            "METADESCRIPTION": "={{ JSON.parse($('IA: Especialista en Estrategia SEO').item.json.output[0].content[0].text).meta_description }}",
+            "URL": "={{ $('WordPress: Publicación Final (En Vivo)').item.json.link }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "ID POST",
+              "displayName": "ID POST",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PROMPT",
+              "displayName": "PROMPT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "TITLE",
+              "displayName": "TITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DATA",
+              "displayName": "DATA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "METATITLE",
+              "displayName": "METATITLE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "METADESCRIPTION",
+              "displayName": "METADESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        672
+      ],
+      "id": "bde4e267-6c45-4294-abdf-745cefce98d9",
+      "name": "Google Sheets: Tarea Completada",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WRJKLyPmbRxt6K2l",
+          "name": "Google Sheets Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Obtiene el contexto del artículo que deseas generar mediante IA.",
+        "height": 256,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -128
+      ],
+      "id": "a8232fed-6dd0-4b56-85d5-82bda84ee27e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Crea el borrador de la entrada en WordPress con el texto del artículo y el título que fueron generados previamente.",
+        "height": 288,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        -160
+      ],
+      "id": "a494e891-d1d5-4d5b-9f90-eceb07e8cf61",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w",
+          "mode": "list",
+          "cachedResultName": "ExploraMundo Travel Contenidos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contenidos 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t1m_iRYAi2GqD0I0k0V3LW5Dsyade29EXLUjoU3o80w/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID POST"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        -48
+      ],
+      "id": "e5e3b87f-8ee4-4e1f-85dc-059eaf8cee49",
+      "name": "Google Sheets: Lectura de Planificación",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WRJKLyPmbRxt6K2l",
+          "name": "Google Sheets Conexión"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "El experto en SEO analiza el artículo creado y genera el meta título y la meta descripción adecuados.",
+        "height": 256,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        256
+      ],
+      "id": "d0327d9d-9e08-4726-9d36-6fa7bd10d10d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Sube la imagen generada a la biblioteca de medios de WordPress y luego la asocia con el artículo recién creado.",
+        "height": 256,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        256
+      ],
+      "id": "8b5ffb44-4f93-46e8-bd2e-90a46a74b020",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Los metadatos generados se asocian con la entrada.",
+        "height": 256,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        224,
+        592
+      ],
+      "id": "8158f3a7-d955-4371-927d-6434de6eb5ca",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Optimiza publicaciones de blog en WordPress con IA\n\nEsta es una herramienta potente para automatizar la creación y optimización de publicaciones de blog, ahorrando tiempo y garantizando contenido de alta calidad, optimizado para SEO en WordPress utilizando el plugin Yoast.\n\nEn la hoja de estilos y en la columna **“Prompt”** escribe el tema que luego será desarrollado por la IA.",
+        "width": 992,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -336
+      ],
+      "id": "40127812-a23f-4b8c-bfef-a824e0eeeaec",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        32
+      ],
+      "id": "c52d67f4-9dae-4764-97a5-ee8c09bf57f8",
+      "name": "Programador: Activador del Piloto Automático (Diario)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Disparador Manual de Pruebas": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Lectura de Planificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Control: Procesar 1 Artículo": {
+      "main": [
+        [
+          {
+            "node": "Preparación de Variables Iniciales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparación de Variables Iniciales": {
+      "main": [
+        [
+          {
+            "node": "IA: Redactor de Artículos de Viaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA: Redactor de Artículos de Viaje": {
+      "main": [
+        [
+          {
+            "node": "IA: Generador de Títulos Atractivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA: Generador de Títulos Atractivos": {
+      "main": [
+        [
+          {
+            "node": "WordPress: Crear Borrador Inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPress: Crear Borrador Inicial": {
+      "main": [
+        [
+          {
+            "node": "Lógica: Optimizador de Búsqueda (Pexels)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lógica: Optimizador de Búsqueda (Pexels)": {
+      "main": [
+        [
+          {
+            "node": "Pexels: Buscar Imagen de Destino",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pexels: Buscar Imagen de Destino": {
+      "main": [
+        [
+          {
+            "node": "Pexels: Descargar Archivo Binario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pexels: Descargar Archivo Binario": {
+      "main": [
+        [
+          {
+            "node": "WordPress: Subir a Biblioteca de Medios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPress: Subir a Biblioteca de Medios": {
+      "main": [
+        [
+          {
+            "node": "WordPress: Vincular Imagen Destacada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPress: Vincular Imagen Destacada": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Registro de Progreso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets: Registro de Progreso": {
+      "main": [
+        [
+          {
+            "node": "IA: Especialista en Estrategia SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA: Especialista en Estrategia SEO": {
+      "main": [
+        [
+          {
+            "node": "Yoast SEO: Inyectar Metadatos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Yoast SEO: Inyectar Metadatos": {
+      "main": [
+        [
+          {
+            "node": "WordPress: Publicación Final (En Vivo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPress: Publicación Final (En Vivo)": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Tarea Completada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets: Lectura de Planificación": {
+      "main": [
+        [
+          {
+            "node": "Control: Procesar 1 Artículo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programador: Activador del Piloto Automático (Diario)": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Lectura de Planificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3b0f4b19-7ef8-4d40-ab2f-976a11618dba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36505a5bdb39a277b4bc3d45270c2b01ace0f3f723f1b1e6e77dd535f8ee304b"
+  },
+  "id": "lHQvgcCCI06iyr_FG0QJx",
+  "tags": []
+}

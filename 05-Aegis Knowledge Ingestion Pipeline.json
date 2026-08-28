@@ -1,0 +1,212 @@
+{
+  "name": "Ingesta Informaion Aegis",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1unimnk7Pi5aMZ0QlKoE428PdmDYlC1ou",
+          "mode": "list",
+          "cachedResultName": "Informacion Aegis",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1unimnk7Pi5aMZ0QlKoE428PdmDYlC1ou"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8b974482-883c-403b-862e-14277de217fd",
+      "name": "Trigger Ingesta Documental (Drive)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "obvMCUzfO8nr9iJ7",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.webViewLink }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9c0ba631-01d3-47fd-a821-03eb478f2d62",
+      "name": "Extractor de Documento ",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "obvMCUzfO8nr9iJ7",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        208
+      ],
+      "id": "725482ea-f0d3-4e7c-be29-8eda45435609",
+      "name": "Normalizador de Documentos"
+    },
+    {
+      "parameters": {
+        "chunkSize": 800,
+        "chunkOverlap": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        560,
+        400
+      ],
+      "id": "b910e131-9d89-40d7-aba3-67652c810275",
+      "name": "Segmentador Semantico "
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "embeddingBatchSize": 50,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1d60ea36-fcf4-4a3f-acd2-85928e0734b4",
+      "name": "Repositorio Vectorial (Supabase)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ybawSLvCMOoFr35U",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        224
+      ],
+      "id": "a1881679-83dd-479c-a243-cb20848d9b64",
+      "name": "Generador de Embeddings",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger Ingesta Documental (Drive)": {
+      "main": [
+        [
+          {
+            "node": "Extractor de Documento ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extractor de Documento ": {
+      "main": [
+        [
+          {
+            "node": "Repositorio Vectorial (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizador de Documentos": {
+      "ai_document": [
+        [
+          {
+            "node": "Repositorio Vectorial (Supabase)",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Segmentador Semantico ": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Normalizador de Documentos",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generador de Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Repositorio Vectorial (Supabase)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8f8f53fb-e09b-404f-ab6c-fa112c6de353",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c526d9c9424a7ab91fe50e5c10f87a3dcf57a2e474bcc60d6e4db5936de5342b"
+  },
+  "nodeGroups": [],
+  "id": "2OC9YWUTLzrllbLF",
+  "tags": []
+}

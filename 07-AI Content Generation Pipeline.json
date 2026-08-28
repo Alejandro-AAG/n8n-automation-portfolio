@@ -1,0 +1,234 @@
+{
+  "name": "Generador de Contenido (n8n) + OpenAI + Google Sheets",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "22a8861f-85e4-49d0-96b3-cb0097443973",
+      "name": "Inicio del proceso (Ejecucion Manual)"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8",
+          "mode": "list",
+          "cachedResultName": "GeneradorDescripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Descripcion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Descripcion_Generada"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c7b95abf-15f4-494f-b208-c99f1fa6db7c",
+      "name": "Lectura de Datos desde Google Sheets ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zFj4vaUsPKrHvFIp",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Eres un redactor profesional especialezado en contenido comercial y educativo.\n\nGenera una descripción clara, profesional y atractiva a partir de estos datos:\n\nNombre: {{$json.Nombre}}\nTipo: {{$json.Tipo}}\nCaracterísticas: {{$json.Caracteristicas}}\n\nReglas:\n- Lenguaje profesional\n- No usar emojis\n- No usar listas\n- No usar títulos\n- 2 a 3 frases máximo\n- Tono claro, serio y comercial\n- Orientado a valor y utilidad real"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        432,
+        0
+      ],
+      "id": "6ead4059-3803-43be-a4a1-70109ea4abd1",
+      "name": "Generacion de Descripcion con IA",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8",
+          "mode": "list",
+          "cachedResultName": "GeneradorDescripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Descripcion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1X_-N5B5nlHM5_bX0qH48qc1I1TFqKt5PpvU1pPA-cI8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Lectura de Datos desde Google Sheets ').item.json.row_number }}",
+            "Descripcion_Generada": "={{ $json.output[0].content[0].text }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Caracteristicas",
+              "displayName": "Caracteristicas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion_Generada",
+              "displayName": "Descripcion_Generada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        784,
+        0
+      ],
+      "id": "514b915b-761d-41b5-87e0-0f6940d5b5cf",
+      "name": "Guardar descripciones en Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zFj4vaUsPKrHvFIp",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Inicio del proceso (Ejecucion Manual)": {
+      "main": [
+        [
+          {
+            "node": "Lectura de Datos desde Google Sheets ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lectura de Datos desde Google Sheets ": {
+      "main": [
+        [
+          {
+            "node": "Generacion de Descripcion con IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generacion de Descripcion con IA": {
+      "main": [
+        [
+          {
+            "node": "Guardar descripciones en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5a3bbeb0-1612-4b4e-9ccd-a54f8d75d3fe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c526d9c9424a7ab91fe50e5c10f87a3dcf57a2e474bcc60d6e4db5936de5342b"
+  },
+  "nodeGroups": [],
+  "id": "4UO4dpbUx6Qav9gw",
+  "tags": []
+}

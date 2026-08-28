@@ -1,0 +1,133 @@
+{
+  "name": "GoogleDriveNotificacionAdjunto",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1l0bUVDP74uz65IayHvvZrWRpj8BuaBc8",
+          "mode": "list",
+          "cachedResultName": "ArchivosN8N",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1l0bUVDP74uz65IayHvvZrWRpj8BuaBc8"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3d96d9e2-3494-4f71-b9cc-5edb06693ee9",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "msVeSnaIMLHZPsXq",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "alejandro.allendes.pro@gmail.com",
+        "subject": "Nuevo archivo subido ",
+        "message": "Nuevo archivo subido a la carpeta \"ARCHIVOSN8N\"",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "57371fb1-afa3-428e-9663-a1a13b350a98",
+      "name": "Send a message",
+      "webhookId": "3708427f-7a5f-474d-9195-37f7b373ede9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4zyz97E2M9tOsxrw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.webViewLink }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "cb9949ca-cddb-4f88-a12f-0ee1bb5cd460",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "msVeSnaIMLHZPsXq",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4a965874-1814-4570-b56b-88a59eb0eb8f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "484bf3197f02a8156e15c33a99884d3974c2d3de2463868c628e10c440db5dbf"
+  },
+  "id": "sdNeNX9jn6vQAwQE",
+  "tags": []
+}

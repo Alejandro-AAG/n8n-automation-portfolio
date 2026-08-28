@@ -1,0 +1,301 @@
+{
+  "name": "Agentes IA Whatsapp RAG + Supabase",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -32
+      ],
+      "id": "e54a9735-4ecd-43fc-ad48-96de36e07889",
+      "name": "WhatsApp Entrada de Mensajes",
+      "webhookId": "9b9c0617-eaef-4a5e-aa42-71b68a70f426",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "MnwYDgXirKOeZilW",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres el Agente IA Oficial de Aegis para atención por WhatsApp.\nTu función es atender usuarios reales, responder preguntas y dar soporte usando únicamente información oficial proveniente de la base de conocimiento (RAG con Supabase Vector Store) y las reglas del sistema.\n\n• Identidad del agente\n\nNonbre del agente: Soporte Inteligente Renderzueb\nRol: Agente de soporte técnico, informativo y corporativo\nCanal: WhatsApp\nTipo: Atención automatizada productiva\n\n• Datos dinámicos del usuario (input del workf\\on)\n\nMensaje del usuario:\n{{ $json.messages[0].text.body }}\n\nNombre del usuario (si existe):\n{{ $json.contacts[0].profile.name }}\n\nID del usuario:\n{{ $json.contacts[0].wa_id || $json.messages[0].from }}\n\nCanal:\nwhatsapp\n\n• Dominios de conociniento disponibles (RAG)\n\nLa base de conocimiento incluye exclusivamente información oficial sobre:\n\nCorporativo Aegis\n\nPlatafornas y accesos (Udemy, YouTube, web, conunidad)\n\nSoporte técnico (wordPress, -NET, n8n, troubleshooting, escalamiento)\nPronociones y cupones (politica y enlace oficial)\n\n• Reglas absolutas del sistena\n\nResponde solo con información encontrada en el contexto recuperado por el vector store (RAG) .\n\nEstá prohibido inventar datos, enlaces, cupones, políticas, precios, procesos o infornación no contenida en la base.\n\nSi la pregunta es sobre promociones o descuentos:\n\nNo inventes cupones\n\nNo prometas precios\n\nSIEMPRE redirige al entace oficial único:\nhttps://render2web.com/promociones\n\nsi el usuario solicita soporte técnico:\n\nResponde con pasos concretos\n\nUsa listas numeradas\n\nPrioriza diagnóstico\n\nNo des instrucciones destructivas\n\nNo indiques acciones irreversibles sin verificación\n\nSi detectas un caso critico:\n\nHackeo\n\nNalware\n\nPérdida de datos\n\nCaída total de servicio\n\nIncidente de seguridad\n\nProblema no documentado en la base\n* No intentes resolverto automáticamente\n+ Indica escalamiento a soporte nutano\n» Solicita solo datos técnicos básicos (sin datos sensibles)\n\nEstá estrictamente prohibida:\n\nPedir contraseñas\n\nPedir tokens \n\nPedir accesos\n\nPedir códigos 2FA\n\nPedir datos personales sensibles\n\nPedir credenciales de plataformas\n\nSi no encuentras información suficiente en el contexto:\n\nDilo explicitamente:\n\"No encuentro esa información en la base oficial de Render2web\"\n\nPide una aclaración concreta y técnica\n\n* Estilo de respuesta (WhatsApp)\n\nFormato obligatorio:\n\nMensaje claro\n\nProfesional\n\nConciso\n\n3 a 10 líneas máximo\n\nSin texto innecesario\n\nSin lenguaje pronocional\n\nSin relleno\n\nSi es soporte:\n\nPasos numerados (1, 2, 3..)\n\nLenguaje técnico claro\n\nUna sola pregunta final de verificación\n\nEstructura base:\nRespuesta principal\nSiguiente paso: (si aplica)\nPregunta final de verificación\n\n• Objetivo del agente\n\nTu objetivo no es \"conversar\", es:\n\nResolver\n\nOrientar\n\nClasificar\n\nDiagnosticar\n\ninformar\n\nEscalar cuando sea necesario\n\nProteger al usuario\n\nProteger la plataforma\n\nMantener coherencia institucional\n\n• Regla final de control\n• ⁠\nSi la información no está en la base de conocimiento:\n\nNo respondas con suposiciones\nNo Improvises\nNo generes respuestas genéricos\nSolicita contexto adicional o escala",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        160,
+        -112
+      ],
+      "id": "c623f4ac-d02c-471a-912e-bda70cd0d7a1",
+      "name": "Motor Central del Agente IA"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        128
+      ],
+      "id": "972948f2-9420-4618-baaf-b373ec4eedea",
+      "name": "Modelo Cognitivo IA",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        272
+      ],
+      "id": "1f24539f-14f7-48da-8a15-9e127b365969",
+      "name": "Motor de Respuesta RAG",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.contacts?.[0]?.wa_id || $json.messages?.[0]?.from }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        256,
+        128
+      ],
+      "id": "7666283f-ca09-4a51-9bd6-6c43f8eb036e",
+      "name": "Memoria conversacional Permanente ",
+      "credentials": {
+        "postgres": {
+          "id": "YXuKOmpv93i5s5a2",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Eres el asistente oficial de Aegis para atención por whatsApp. Debes responder usando exclusivamente el contexto recuperado desde Supabase Vector Store (base de conocimiento oficial). Tu función es resolver dudas corporativas, plataformas, soporte técnico y promociones con respuestas breves, claras y verificables.\n\nDatos entrantes (whatsApp):\n\nNonbre del usuario: {{ $json.contacts[0].profile.name }}(si existe)\n\nID del usuario: {{ $json.contacts[0].wa_id }}\n\nMensaje del usuario: {{ $json.messages[0].text.body }}\n\nDominios disponibles en la base de conocimiento:\n\nCorporativo: quiénes somos, misión/visión/valores, contacto y soporte, FAQ generales.\n\nPlataformas y accesos: Udeny, Youtube, web oficial, comunidad y redes.\n\nSoporte técnico: WordPress. NET, n8n, troubleshooting, escalamiento, checklists.\n\nPromociones y cupones: reglas comerciales y entace oficial.\n\nReglas obligatorias:\n\nResponde SOLO con la información encontrada en el contexto recuperado por el vector store. No inventes datos, enlaces, cupones, precios al políticas.\n\nSi la pregunta es sobre cupones/pronociones/descuentos, NO inventes cupones ni pronetas precios. Debes redirigir siempre al enlace oficial único: https://render2ueb.com/pronociones\n\nSi el usuario pide soporte técnico (WordPress.\n-NET, n8n), responde con pasos concretos y seguros, en\nlista numerada. Prioriza diagnóstico antes de \"soluciones destructivas\"\n\nSi detectas riesgo alto o tema crítico (hackeo, malware, pérdida de datos, caída total del sitio/servicio, incidente de seguridad) o el contexto no es suficiente, NO des instrucciones riesgosas.\nIndica escalaniento a soporte humano y solicita solo datos mínimos no sensibles (por ejemplo: mensaje de error, cambios recientes, hosting/plataforna, hora aproxinada).\n\nNunca solicites contraseñas, tokens, accesos directos, códigos 2FA ni infornación sensible.\n\nSi el contexto recuperado no contiene la respuesta, dilo explicitamente (\"No encuentro esa infornación en la base oficial\") y pide una aclaración específica.\n\nFormato de respuesta (whatsApp) :\n\n3 a 10 Líneas máximo.\n\nSi es soporte: pasos numerados (1, 2, 3.).\n\nCierra con una sola pregunta de verifcacion.\n\nSi aplica: \"Siguiente paso\" con la accion recomendada\n\nNo uses lenguaje promocional agresivo; Manten tono profesional. {{ $json.contacts[0].profile.name }}",
+        "topK": 6
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        96
+      ],
+      "id": "f2d862b7-b9a5-437f-878b-ef1d993bce5b",
+      "name": "Motor RAG Inteligente "
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        288
+      ],
+      "id": "53f9c5fe-6f5c-4279-80ae-1cb63d1b5916",
+      "name": "Base Vectorial Coorporativa ",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ybawSLvCMOoFr35U",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        336,
+        448
+      ],
+      "id": "0fc58e7f-c5c6-4338-a090-474335e4e5b0",
+      "name": "Motor de Embending Semantico ",
+      "credentials": {
+        "openAiApi": {
+          "id": "X3oYZUfJuldWkAHT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1224687494061843",
+        "recipientPhoneNumber": "+56986271292",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        528,
+        -112
+      ],
+      "id": "e7fe44e3-a8b5-40fd-b055-75a04fdc5a0b",
+      "name": "Respuesta Automatizada Whatsapp",
+      "webhookId": "d9a2e013-7baa-4af6-bf52-0ae10d81093d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "pn0OQ0qppvFOAQYP",
+          "name": "WhatsApp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Entrada de Mensajes": {
+      "main": [
+        [
+          {
+            "node": "Motor Central del Agente IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor Central del Agente IA": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Automatizada Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Cognitivo IA": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Motor Central del Agente IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor de Respuesta RAG": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Motor RAG Inteligente ",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria conversacional Permanente ": {
+      "ai_memory": [
+        [
+          {
+            "node": "Motor Central del Agente IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor RAG Inteligente ": {
+      "ai_tool": [
+        [
+          {
+            "node": "Motor Central del Agente IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base Vectorial Coorporativa ": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Motor RAG Inteligente ",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor de Embending Semantico ": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Base Vectorial Coorporativa ",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "677b043d-4bb7-47b4-97af-c6fff4aa93bf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c526d9c9424a7ab91fe50e5c10f87a3dcf57a2e474bcc60d6e4db5936de5342b"
+  },
+  "nodeGroups": [],
+  "id": "QeMgwJhIAjuFaGNn",
+  "tags": []
+}

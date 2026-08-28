@@ -1,0 +1,66 @@
+{
+  "name": "Envio De Email con Gmail",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a968e399-39b3-4c52-9698-61d59e2c9788",
+      "name": "Ejecucion Evio de Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "allendesgavilanalejandro.a@gmail.com",
+        "subject": "Email de ejemplo desde n8n ",
+        "emailType": "text",
+        "message": "Hola enviado desde n8n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3eb16171-589f-457f-ae98-0719755a0819",
+      "name": "Envio de Mensajes",
+      "webhookId": "185a2f97-8c3e-4f47-b2c4-5cfefeab5813",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4zyz97E2M9tOsxrw",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ejecucion Evio de Email": {
+      "main": [
+        [
+          {
+            "node": "Envio de Mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2b7e6d41-72fd-4565-9744-a0deca5756ad",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "484bf3197f02a8156e15c33a99884d3974c2d3de2463868c628e10c440db5dbf"
+  },
+  "id": "D5LGOr4YPgjbZ5lT",
+  "tags": []
+}

@@ -1,0 +1,367 @@
+{
+  "name": "Respuesta Correos Promocionales",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c207ce16-9de8-4017-a1cd-c28449e4a1ee",
+      "name": "Gmail - Correo Entrante",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZL4rGDKCzwYSz9Mu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6bc884be-a56a-416b-8779-b264615bcccd",
+      "name": "Gmail - Obtener Contenido del Correo",
+      "webhookId": "7b06892c-7e68-4105-90a6-06db051d54b7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZL4rGDKCzwYSz9Mu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ed0ec0e-4677-4917-bf03-4c6fa70b05e2",
+              "name": "Texto a analizar ",
+              "value": "={{ ($json.Subject + \"\" + $json.snippet).toLowerCase() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b88cda91-1afa-43a1-b42d-f8f53f72cf92",
+      "name": "Preparar Texto para Análisis"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6fa58610-f534-4e59-a20d-029aa88600a4",
+              "leftValue": "={{ $('Gmail - Obtener Contenido del Correo').item.json.From }}",
+              "rightValue": "alejandro.allendes.dev@gmail.com",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        -48
+      ],
+      "id": "c6b662b6-f064-4e5f-99a9-92a794dc4a03",
+      "name": "Validar que no sea correo propio "
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c14f442f-faf8-4d16-bb60-62490ee68c79",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "prueba",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "1397fcc1-c18b-4fbe-8774-8ca42d007cfc",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "prúeba",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "e0ce1b81-66da-4bd5-be86-fd7dc540e459",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "pruebas",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6a6be622-55d1-468f-90cc-336b5878a743",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "correo",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "fca5d5ff-edb2-47b3-9492-4daef3d43d87",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "corréo",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "78b65382-9aba-41f0-8e70-49c424985f5c",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "de",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bbe12498-3d95-419f-842a-72a1f8fd56c9",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "esta",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "c9a58dd2-c4b1-462e-89d1-b4c74ac4fdb9",
+              "leftValue": "={{ $json['Texto a analizar '] }}",
+              "rightValue": "orden",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        -64
+      ],
+      "id": "85d12497-4fb4-479d-9cb7-62d247e32bcd",
+      "name": "Correo solicita cupones o promociones"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail - Obtener Contenido del Correo').item.json.id }}",
+        "message": "<p>Hola, </p> <p>Gracias por tu mensaje  </p> <p> Si estás buscando <strong>cupones, descuentos o promociones activas</strong>para mis cursos, puedes encontrarlos todos actualizados en el siguiente enlace: </p> <p> <a href= \"https://render2web.com/promociones-“target=\"_blank”> https://render2wfb.com/promociones </a> </p> <p> Ahí publico siempre las mejores ofertas disponibles. </p> <p> Saludos,‹br› «strong›render2web</strong> </p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        -144
+      ],
+      "id": "cc938039-a873-4897-9a27-ab5887becd41",
+      "name": "Responder con enlace de promociones",
+      "webhookId": "e9c4a8e6-4477-44e2-b015-226d6571cbc8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZL4rGDKCzwYSz9Mu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail - Obtener Contenido del Correo').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1408,
+        -144
+      ],
+      "id": "465d736b-9aa1-43cc-ae06-5f5c0e9afb62",
+      "name": "Marcar correo como leido",
+      "webhookId": "8ed21426-60a5-439a-a981-32b0b2221ad5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZL4rGDKCzwYSz9Mu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "SPAM"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1616,
+        -144
+      ],
+      "id": "04d84220-3930-4af0-825b-145632313705",
+      "name": "Etiqueta como SPAM",
+      "webhookId": "e0193399-c832-47d8-9c83-49b551e33085",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZL4rGDKCzwYSz9Mu",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail - Correo Entrante": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Obtener Contenido del Correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Obtener Contenido del Correo": {
+      "main": [
+        [
+          {
+            "node": "Preparar Texto para Análisis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Texto para Análisis": {
+      "main": [
+        [
+          {
+            "node": "Validar que no sea correo propio ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar que no sea correo propio ": {
+      "main": [
+        [
+          {
+            "node": "Correo solicita cupones o promociones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correo solicita cupones o promociones": {
+      "main": [
+        [
+          {
+            "node": "Responder con enlace de promociones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder con enlace de promociones": {
+      "main": [
+        [
+          {
+            "node": "Marcar correo como leido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar correo como leido": {
+      "main": [
+        [
+          {
+            "node": "Etiqueta como SPAM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0ee94901-2bb9-4353-a3fc-f42cb8f78083",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb43d454de86e16c70e8332b3483ba8ba3f9e13b86be54b9ec02ff46da4263a5"
+  },
+  "nodeGroups": [],
+  "id": "q3JjQ3l5A1DJ6Gxn",
+  "tags": []
+}

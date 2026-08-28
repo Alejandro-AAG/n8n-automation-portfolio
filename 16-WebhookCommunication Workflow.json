@@ -1,0 +1,64 @@
+{
+  "name": "Comunicacion con WebHooks",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Test-Webhook-Site",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        -48
+      ],
+      "id": "85871510-f4d7-4c4c-a64d-5746921321b8",
+      "name": "Webhook",
+      "webhookId": "9ca6084f-e98e-4d62-805f-cbb2b3da7367"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/a28efa9f-c7ba-48c9-82ed-de120d4a5d67",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n\"evento\": \"test_n8n\",\n\"mensaje\": \"Hola desde n8n\",\n\"origen\": \"Worflow_webhook\",\n\"timestamp\":\"{{ $now }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -32,
+        -48
+      ],
+      "id": "5c848447-f8b4-43b8-bc4a-e2133de40e07",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "994f7d7f-78b1-446b-8ba7-6bd8a5eb906c",
+  "meta": {
+    "instanceId": "d7befdd0789441a3097155b42efa9c9b7eb4fccd15806216f0c7a42f2c0fc877"
+  },
+  "id": "oB4OpofvBJAcdpPW",
+  "tags": []
+}

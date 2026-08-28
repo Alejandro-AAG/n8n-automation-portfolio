@@ -1,0 +1,153 @@
+{
+  "name": "Modelos Vision Artificial en Automatizacion",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8ef8aca8-fc72-429e-95b1-4456f7fc0453",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "843a2f8c-8877-40f8-bc0a-55354fd716e7",
+              "name": "image_url",
+              "value": "https://cdn.pixabay.com/photo/2019/07/23/13/51/shepherd-dog-4357790_1280.jpg",
+              "type": "string"
+            },
+            {
+              "id": "84be9a4c-c1e6-4b71-bbb7-9c4e3eb655cf",
+              "name": "Prompt",
+              "value": "Describe la imagen de forma clara, objetiva y concisa",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        0
+      ],
+      "id": "56f4b43e-1c00-459e-a3f7-580a7dad43d8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "text": "= {{ $json.Prompt }}",
+        "imageUrls": "={{ $json.image_url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        0
+      ],
+      "id": "27f4bc02-6b21-4e6f-889b-49684f41ca7f",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "zSCUnVDoZ5RQCrNT",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6c7bfdf-cfde-40dc-ae44-dfecf9e51cb8",
+              "name": "Descripcion",
+              "value": "={{ $json['1'].content[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "5c8b2c13-3cc9-4f7c-800d-a180e692ba38",
+              "name": "Origen",
+              "value": "={{ $('Edit Fields').item.json.image_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        0
+      ],
+      "id": "ef610f4d-32af-4de6-af0b-48f34dd4fd54",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "498e3068-d6dd-4225-89df-3ed187edaa7d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb43d454de86e16c70e8332b3483ba8ba3f9e13b86be54b9ec02ff46da4263a5"
+  },
+  "nodeGroups": [],
+  "id": "j96qDQxW7h6CTaI6",
+  "tags": []
+}

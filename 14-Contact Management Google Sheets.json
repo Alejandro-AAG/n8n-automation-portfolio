@@ -1,0 +1,152 @@
+{
+  "name": "Contacto + Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contacto inteligente",
+        "formDescription": "Formulario de contacto inteligente ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Ingresa tu nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Ingresa tu email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa",
+              "placeholder": "Ingresa el nombre de tu empresa"
+            },
+            {
+              "fieldLabel": "Mensaje",
+              "fieldType": "textarea",
+              "placeholder": "Ingresa tu mensaje"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb81bdd5-f23c-4739-a045-505e17b4c73f",
+      "name": "Formulario de Conatcto",
+      "webhookId": "97a4b6b7-5b01-48bc-b523-4ae2a08ae19c"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1aZZBHnKiWI7rf_u2_ih1cQ9w27BKBrCD-bVohjMxNKc",
+          "mode": "list",
+          "cachedResultName": "libro1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aZZBHnKiWI7rf_u2_ih1cQ9w27BKBrCD-bVohjMxNKc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aZZBHnKiWI7rf_u2_ih1cQ9w27BKBrCD-bVohjMxNKc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ebb90e93-2067-4bf6-aa70-881d6aa26d1c",
+      "name": "Agregar Fila en Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ylIQF3sR9DVRPVI0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "IGmwvloLqlj9vx5o",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/IGmwvloLqlj9vx5o",
+          "cachedResultName": "Worflow Envio - Email"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "49fbd8d8-6b89-4b6d-8526-1d45cddc1b77",
+      "name": "Call \"Worflow Envio Email\""
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Formulario de Conatcto": {
+      "main": [
+        [
+          {
+            "node": "Agregar Fila en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Fila en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Call \"Worflow Envio Email\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "84fa1455-48fe-4da4-83d8-90c6817ae0b6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d7befdd0789441a3097155b42efa9c9b7eb4fccd15806216f0c7a42f2c0fc877"
+  },
+  "id": "Dwq7bZ7smHrctBNj",
+  "tags": []
+}
